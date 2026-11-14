@@ -1,17 +1,18 @@
 class Solution {
 public:
     int minimumSumSubarray(vector<int>& nums, int l, int r) {
-        //brute force solution:
+        //using sliding window:
         int n = nums.size();
         int best = INT_MAX;
 
-        for(int i=0;i<n;i++){
-            int sum = 0;
-            for(int j=i;j< min(i+r,n);++j){
-                sum += nums[j];
-                if((j-i+1) >= l && ((sum > 0) && (sum < best))){
-                    best = sum;
+        for(int k=l;k<=r;k++){
+            int s = accumulate(nums.begin(), nums.begin() + k - 1,0);
+            for(int i = k-1;i<n;i++){
+                s += nums[i];
+                if(0<s && s < best){
+                    best = s;
                 }
+                s -= nums[i-k + 1];
             }
         }
         return best == INT_MAX ? -1 : best;
